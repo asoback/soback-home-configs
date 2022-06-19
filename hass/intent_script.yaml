@@ -1,0 +1,99 @@
+  TestNotify:
+    speech:
+      text: This is a test
+    action:
+      - service: persistent_notification.create
+        data:
+          message: "Hello"
+          title: "From a persistent notification"
+
+
+#### Time ####
+  GetTime:
+    speech:
+      text: It is {{ states.sensor.time }}
+
+#### Weather ####
+  GetTemperature:
+    speech:
+      text: Right now, its {{ states.weather.home.attributes.temperature }} degrees {{ states.weather.home.attributes.temperature_unit }}
+  GetWind:
+    speech: 
+      text: Right now, the wind speed is {{ states.weather.home.attributes.wind_speed }}
+  GetCondition:
+    speech:
+      text: Right now, its {{ states.weather.home.attributes.temperature }} degrees {{ states.weather.home.attributes.temperature_unit }} and {{ states.weather.home.attributes.condition }}
+  GetForecast:
+    speech:
+      text: Tomorrow, expect {{ states.weather.home.attributes.forecast[0].condition }} the temperature to be {{ states.weather.home.attributes.forecast[0].temperature }} with a low of {{ states.weather.home.attributes.forecast[0].templow }} degrees {{ states.weather.home.attributes.temperature_unit }}
+
+#### Sun ####
+  GetSunRise:
+    speech:
+      text: The next sunrise is at {{ states.sun.sun.attributes.next_rising | timestamp_custom(' %I %M') | replace("0", "") }}
+  GetSunSet:
+    speech:
+      text: The next sunset is at {{ states.sun.sun.attributes.next_setting | timestamp_custom(' %I %M') | replace("0", "") }}
+  GetMoonPhase:
+    speech:
+      text: The moon is in {{ states.sensor.moon }}
+
+#### Lights ####
+  ChangeLightState: 
+    action:
+      - service: switch.turn_{{ state }}
+        target:
+          entity_id: switch.tall_lamp
+    speech:
+      text: Turning {{ state }} the {{ name }}
+
+#### Timers ####
+  SetTimer:
+    action:
+      - condition: or
+        conditions:
+          - condition: state
+            entity_id: timer.timer1
+            state: 'idle'
+          - condition: state
+            entity_id: timer.timer2
+            state: 'idle'
+          - condition: state
+            entity_id: timer.timer3
+            state: 'idle'
+      - service: timer.start
+        target:
+          entity_id: timer.{{ 'timer1' if states.timer.timer1.state == 'idle' else 'timer2' if states.timer.timer2.state == 'idle' else 'timer3' }}
+        data_template:
+          duration: "{{ hours if hours != NULL else '00' }}:{{ minutes if minutes != NULL else '00' }}:{{ seconds if seconds != NULL else '00' }}"
+    speech:
+      text: > 
+        Set a timer for {{ hours if hours != NULL }} {{ 'hours' if hours != NULL }}
+        {{ minutes if minutes != NULL }} {{ 'minutes' if minutes != NULL }} 
+        {{ seconds if seconds != NULL }} {{ 'seconds' if seconds != NULL }}
+
+  GetTimerDuration:
+    speech:
+      text: >
+        {% if states('timer.timer1') == 'active' %} 
+        A {{ states.timer.timer1.attributes.duration }} timer
+        with about
+        {{ states.timer.timer1.attributes.duration }}
+        remaining
+        {% else %}
+        You don't have any timers set
+        {% endif %}
+
+  CancelTimer:
+    action:
+      - service: timer.cancel
+        target:
+          entity_id: timer.timer1
+      - service: timer.cancel
+        target:
+          entity_id: timer.timer2
+      - service: timer.cancel
+        target:
+          entity_id: timer.timer3
+    speech:
+      text: Cancelled all timers

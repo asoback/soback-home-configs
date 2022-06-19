@@ -1,0 +1,97 @@
+esphome:
+  name: livingroom
+
+esp32:
+  board: nodemcu-32s
+  framework:
+    type: arduino
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  password: ""
+
+ota:
+  password: ""
+
+wifi:
+  ssid: "THE NAME OF MY WIFI"
+  password: "THE WIFI PASSWORD"
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Livingroom Fallback Hotspot"
+    password: "XXXXX"
+
+captive_portal:
+
+light:
+  - platform: binary
+    name: "livingroom_esp_red"
+    output: lr_red_output
+    id: lr_led_r
+  - platform: binary
+    name: "livingroom_esp_blue"
+    output: lr_blue_output
+    id: lr_led_b
+  - platform: binary
+    name: "livingroom_esp_yellow"
+    output: lr_yellow_output
+    id: lr_led_y
+  
+binary_sensor:
+  - platform: gpio
+    name: "livingroom_motion"
+    device_class: motion
+    pin: GPIO18
+    on_press:
+      then:
+        - light.turn_on: lr_led_b
+        - output.turn_on: lr_buzzer
+        - output.ledc.set_frequency:
+            id: lr_buzzer
+            frequency: "1000Hz"
+        - output.set_level:
+            id: lr_buzzer
+            level: "50%"
+        - delay: 1s
+        - output.turn_off: lr_buzzer
+    on_release:
+      then:
+        - light.turn_off: lr_led_b
+        - light.turn_on: lr_led_y
+        - delay: 1s
+        - light.turn_off: lr_led_y
+        - light.turn_on: lr_led_r
+        - delay: 1s
+        - light.turn_off: lr_led_r
+
+output:
+  - id: lr_red_output
+    platform: gpio
+    pin: GPIO16
+  - id: lr_blue_output
+    platform: gpio
+    pin: GPIO26
+  - id: lr_yellow_output
+    platform: gpio
+    pin: GPIO27
+  - platform: ledc
+    pin: GPIO17
+    id: lr_buzzer
+
+sensor:
+  - platform: adc
+    pin: 32
+    name: "photoresistor"
+    update_interval: 30s
+  - platform: adc
+    pin: 35
+    name: "thermometer"
+    update_interval: 5s
+    filters:
+      - lambda: return (((x * 1000) - 500) / 10) * 9 / 5 + 32;
+
+
