@@ -8,7 +8,10 @@ My home assistant  and rhasspy configs, and various other helpful scripts and in
 - Raspberry pi 3b+
 - ReSpeaker 2 Mics Pi Hat
 - Small USB speaker
-- Bluetooth speaker
+- Libre Computer Board (le potato)
+- USB external SSD
+- Multiple WiFi Switches ([Kasa](https://www.amazon.com/dp/B07RCNB2L3/ref=redir_mobile_desktop?_encoding=UTF8&aaxitk=ad14a5d8642555c3db0f3e7e6c4e07b5&content-id=amzn1.sym.53aae2ac-0129-49a5-9c09-6530a9e11786%3Aamzn1.sym.53aae2ac-0129-49a5-9c09-6530a9e11786&hsa_cr_id=2466403430601&pd_rd_plhdr=t&pd_rd_r=339bb2f5-90d0-437f-9e8f-bee84fc9c400&pd_rd_w=d2lcw&pd_rd_wg=OeoNn&qid=1656038766&ref_=sbx_be_s_sparkle_lsi4d_asin_0_img&sr=1-1-a094db1c-5033-42c6-82a2-587d01f975e8&th=1))
+
 
 ### Raspberry pi setup
 
