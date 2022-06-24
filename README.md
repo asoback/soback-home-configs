@@ -65,3 +65,31 @@ Boot/ -> Auto Login -> Console AutoLogin
 ```
 
 After saving, I am prompted to reboot, and I select yes.
+
+# Setting up the libre computer board
+
+I installed debian 9 stretch with Etcher
+
+https://libre.computer/products/s905x/
+
+The username and password are in the README
+
+```
+sudo apt install network-tools
+sudo apt install net-tools
+sudo apt install hddtemp lm-sensors # to keep track of temps
+```
+
+
+`sudo vim /etc/dhcpcd.conf`
+
+
+# Pihole
+
+I ran the command `curl -sSL https://install.pi-hole.net | bash` as instructed by the [official website](https://github.com/pi-hole/pi-hole/#one-step-automated-install)
+
+Once it finished, I got a message with the webpage URL, the admin password, and some meta data. I copied this to a note, so that I wouldn't forget it.
+
+The URL was http://localhost/admin/ for my Pi.
+
+Because I have a uverse router that doesn't let you put a DNS server behind it, I had to configure each device I wanted to use it. I went to WiFi Settings on my laptops, found my home WiFi name, clicked the Settings icon, and then changed the DNS field from my routers IP address to my Pi IP address.
